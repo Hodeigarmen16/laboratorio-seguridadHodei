@@ -68,7 +68,6 @@ print("crypto{" + new + "}")
 #crypto{aloha}
 
 #Ejercicio8
-# Decode all hex strings into bytes
 KEY1 = bytes.fromhex("a6c8b6733c9b22de7bc0253266a3867df55acde8635e19c73313")
 K2_xor_K1 = bytes.fromhex("37dcb292030faa90d07eec17e3b1c6d8daf94c35d4c9191a5e1e")
 K2_xor_K3 = bytes.fromhex("c1545756687e7573db23aa1c3452a098b71a7fbf0fddddde5fc1")
@@ -87,13 +86,10 @@ print(FLAG.decode())
 #crypto{x0r_i5_ass0c1at1v3}
 
 #Ejercicio9
-# Hex string cifrada
 hex_data = "73626960647f6b206821204f21254f7d694f7624662065622127234f726927756d"
 
-# Convertir de hex a bytes
 data = bytes.fromhex(hex_data)
 
-# Probar todas las claves posibles (0-255)
 for key in range(256):
     decoded = bytes(b ^ key for b in data)
     try:
@@ -103,7 +99,7 @@ for key in range(256):
     except UnicodeDecodeError:
         continue
 
-#{0x10_15_my_f4v0ur173_by7e}
+#crypto{0x10_15_my_f4v0ur173_by7e}
 
 
 #Ejercicio10
@@ -111,16 +107,12 @@ for key in range(256):
 cipher_hex = "0e0b213f26041e480b26217f27342e175d0e070a3c5b103e2526217f27342e175d0e077e263451150104"
 cipher = bytes.fromhex(cipher_hex)
 
-# Sabemos que la flag empieza con "crypto{"
 known = b"crypto{"
 
-# Sacamos la clave XOR usando los primeros bytes
 key = bytes([c ^ k for c, k in zip(cipher, known)])
 
-# La clave se repite, así que la extendemos
 full_key = (key * (len(cipher) // len(key) + 1))[:len(cipher)]
 
-# Desciframos
 flag = bytes([c ^ k for c, k in zip(cipher, full_key)])
 
 print(flag.decode())

@@ -86,3 +86,42 @@ FLAG = bytes(f ^ k1 ^ k2 ^ k3 for f, k1, k2, k3 in zip(FLAG_xor_all, KEY1, KEY2,
 print(FLAG.decode())
 #crypto{x0r_i5_ass0c1at1v3}
 
+#Ejercicio9
+# Hex string cifrada
+hex_data = "73626960647f6b206821204f21254f7d694f7624662065622127234f726927756d"
+
+# Convertir de hex a bytes
+data = bytes.fromhex(hex_data)
+
+# Probar todas las claves posibles (0-255)
+for key in range(256):
+    decoded = bytes(b ^ key for b in data)
+    try:
+        text = decoded.decode()
+        if "crypto" in text:  # buscar la flag
+            print(f"Key: {key} -> {text}")
+    except UnicodeDecodeError:
+        continue
+
+#{0x10_15_my_f4v0ur173_by7e}
+
+
+#Ejercicio10
+
+cipher_hex = "0e0b213f26041e480b26217f27342e175d0e070a3c5b103e2526217f27342e175d0e077e263451150104"
+cipher = bytes.fromhex(cipher_hex)
+
+# Sabemos que la flag empieza con "crypto{"
+known = b"crypto{"
+
+# Sacamos la clave XOR usando los primeros bytes
+key = bytes([c ^ k for c, k in zip(cipher, known)])
+
+# La clave se repite, así que la extendemos
+full_key = (key * (len(cipher) // len(key) + 1))[:len(cipher)]
+
+# Desciframos
+flag = bytes([c ^ k for c, k in zip(cipher, full_key)])
+
+print(flag.decode())
+#crypto{1f_y0u_Kn0w_En0uGH_y0u_Kn0w_1t_4ll}

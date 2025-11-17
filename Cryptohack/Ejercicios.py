@@ -43,4 +43,46 @@ b = bytes.fromhex(hex_string)
 encoded = base64.b64encode(b)
 
 print(encoded.decode())
-#cnJzKptojwWrHvu7j4Sdyodgp4Poqz5Z5v5Jp97w=
+#crypto/Base+64+Encoding+is+Web+Safe/
+
+#Ejercicio6
+# opción sin dependencias externas
+n = 11515195063862318899931685488813747395775516287289682636499965282714637259206269
+
+# calcular el número mínimo de bytes necesarios
+length = (n.bit_length() + 7) // 8
+
+# convertir a bytes (big-endian) y decodificar a string
+msg_bytes = n.to_bytes(length, 'big')
+flag = msg_bytes.decode()
+
+print(flag)
+#crypto{3nc0d1n6_4ll_7h3_w4y_d0wn}
+
+#Ejercicio7
+
+s = "label"
+new = "".join(chr(ord(c) ^ 13) for c in s)
+print("crypto{" + new + "}")
+
+#crypto{aloha}
+
+#Ejercicio8
+# Decode all hex strings into bytes
+KEY1 = bytes.fromhex("a6c8b6733c9b22de7bc0253266a3867df55acde8635e19c73313")
+K2_xor_K1 = bytes.fromhex("37dcb292030faa90d07eec17e3b1c6d8daf94c35d4c9191a5e1e")
+K2_xor_K3 = bytes.fromhex("c1545756687e7573db23aa1c3452a098b71a7fbf0fddddde5fc1")
+FLAG_xor_all = bytes.fromhex("04ee9855208a2cd59091d04767ae47963170d1660df7f56f5faf")
+
+# Recover KEY2  => KEY2 = (KEY2 ^ KEY1) ^ KEY1
+KEY2 = bytes(a ^ b for a, b in zip(K2_xor_K1, KEY1))
+
+# Recover KEY3  => KEY3 = KEY2 ^ (KEY2 ^ KEY3)
+KEY3 = bytes(a ^ b for a, b in zip(KEY2, K2_xor_K3))
+
+# Recover FLAG  => FLAG = FLAG ^ KEY1 ^ KEY2 ^ KEY3
+FLAG = bytes(f ^ k1 ^ k2 ^ k3 for f, k1, k2, k3 in zip(FLAG_xor_all, KEY1, KEY2, KEY3))
+
+print(FLAG.decode())
+#crypto{x0r_i5_ass0c1at1v3}
+
